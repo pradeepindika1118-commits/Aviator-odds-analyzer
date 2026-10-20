@@ -1,12 +1,240 @@
-<!doctype html><html lang="si"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#b7192d"><title>Aviator Odds Analyzer</title><style>
-:root{color-scheme:dark;--bg:#101116;--panel:#1b1d26;--line:#363946;--muted:#b1b5c2;--red:#d9233c;--green:#4de0a0;--gold:#ffd166}*{box-sizing:border-box}body{margin:0;background:linear-gradient(#32131b,#101116 260px);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f7f7fa}.wrap{max-width:1000px;margin:auto;padding:18px 13px 40px}.hero{padding:8px 2px 17px}.kicker{color:#ff9aaa;font-weight:800;font-size:12px;letter-spacing:1.5px}.hero h1{font-size:clamp(26px,6vw,38px);margin:8px 0}.hero p,.hint,.foot{color:var(--muted);line-height:1.55;font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:12px}.label{font-size:12px;color:var(--muted)}.value{font-size:25px;font-weight:800;margin-top:7px;overflow-wrap:anywhere}.green{color:var(--green)}h2{font-size:17px;margin:0 0 12px}.row{display:flex;gap:9px;flex-wrap:wrap}.field{flex:1;min-width:125px}label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}input,textarea,select{width:100%;border:1px solid #454958;border-radius:10px;background:#101218;color:#fff;padding:11px;font-size:16px}textarea{min-height:95px;resize:vertical}.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}button{border:0;border-radius:10px;padding:11px 13px;font-weight:750;background:var(--red);color:white;font-size:14px}button.secondary{background:#353846}button.warn{background:#72521c}.note{margin-top:10px;padding:10px;border-left:3px solid var(--gold);background:#29251b;color:#f7e5af;font-size:12px;line-height:1.5}.split{display:grid;grid-template-columns:1fr;gap:0}.tablewrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}th,td{text-align:right;padding:10px 11px;border-bottom:1px solid var(--line)}th{position:sticky;top:0;background:#292c37}th:first-child,td:first-child{text-align:left}.high{color:var(--green);font-weight:800}.pill{display:inline-block;background:#35202a;color:#ffb5c0;padding:3px 7px;border-radius:7px;font-size:11px}.empty{text-align:center;padding:20px;color:var(--muted)}.stats2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini{background:#242631;padding:10px;border-radius:10px}.mini b{display:block;font-size:20px;margin-top:6px}@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.split{grid-template-columns:1fr 1fr;gap:12px}}
-</style></head><body><main class="wrap"><header class="hero"><div class="kicker">AVIATOR · HISTORY TRACKER</div><h1>Odds Analyzer</h1><p>Round අංක අනුපිළිවෙළට සටහන් කරන්න. 10x හෝ වැඩි Odds සහ ඒවා අතර Round පරතරය බලන්න.</p></header>
-<section class="grid"><div class="card"><div class="label">මුළු රවුන්ඩ්</div><div class="value" id="total">0</div><div class="hint">සටහන් කළ ගණන</div></div><div class="card"><div class="label">10x හෝ වැඩි</div><div class="value green" id="hc">0</div><div class="hint">ඉතිහාසයේ</div></div><div class="card"><div class="label">අවසාන Round</div><div class="value" id="last">—</div><div class="hint" id="lastodd">අවසාන Odd: —</div></div><div class="card"><div class="label">අවසාන 10x+ සිට</div><div class="value" id="since">—</div><div class="hint">Round ගණන</div></div></section>
-<div class="split"><section class="card"><h2>➕ Odds එකතු කරන්න</h2><div class="row"><div class="field"><label for="start">ආරම්භක Round</label><input id="start" type="number" value="5672531" step="1"></div><div class="field"><label for="threshold">High Odd සීමාව (x)</label><input id="threshold" type="number" value="10" min="1" step="0.1"></div></div><label for="newOdds" style="margin-top:12px">අලුත් Odds (කොමාවෙන් වෙන් කරන්න)</label><textarea id="newOdds" placeholder="උදා: 1.25, 3.40, 12.50"></textarea><div class="btns"><button id="add">Odds එකතු කරන්න</button><button class="secondary" id="clear">ආදානය හිස් කරන්න</button></div><p class="hint">දැනට දුන් Odds Round 5672531 සිට ආරම්භ වේ. අලුත් Odds එකතු කළ විට අවසාන Round එකෙන් ඉදිරියට යයි.</p><div class="note">ඉතිහාස දත්තවලින් ඊළඟ ප්‍රතිඵලය නිශ්චිතව පුරෝකථනය කළ නොහැක. මෙය දත්ත සටහන්/විශ්ලේෂණ මෙවලමක් පමණි.</div></section>
-<section class="card"><h2>📊 පරතර විශ්ලේෂණය</h2><div class="stats2"><div class="mini"><span class="label">සාමාන්‍ය 10x+ පරතරය</span><b id="avg">—</b></div><div class="mini"><span class="label">කුඩාම / විශාලම පරතරය</span><b id="minmax">—</b></div></div><p id="summary" class="hint"></p><div class="btns"><button class="secondary" id="csv">CSV Export</button><button class="secondary" id="backup">Backup JSON</button><button class="secondary" id="restore">JSON Restore</button><input id="file" type="file" accept="application/json,.json" hidden><button class="warn" id="reset">සියලු දත්ත මකන්න</button></div><p class="hint">දත්ත මෙම browser එකේ සුරැකේ. Browser data ඉවත් වුවහොත් දත්ත මැකිය හැකි නිසා Backup JSON එකක් තබාගන්න.</p></section></div>
-<section class="card"><div class="row" style="align-items:center;justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">🧾 Round History</h2><div class="row"><input id="search" placeholder="Round / Odd සොයන්න" style="width:165px;font-size:13px;padding:9px"><select id="filter" style="width:auto;font-size:13px;padding:9px"><option value="all">සියල්ල</option><option value="high">10x+</option><option value="low">10x ට අඩු</option></select></div></div><div class="tablewrap"><table><thead><tr><th>Round Number</th><th>Odd</th><th>10x+</th><th>පෙර 10x+ සිට පරතරය</th></tr></thead><tbody id="tbody"></tbody></table><div class="empty" id="empty" hidden>දත්ත නැත.</div></div><div class="btns"><button class="secondary" id="undo">අවසාන එක ඉවත් කරන්න</button></div></section><p class="foot">සටහන: පසුගිය ප්‍රතිඵලවල පරතරය ඊළඟ 10x+ ප්‍රතිඵලය එන වේලාව පෙන්වන්නේ නැත. මුදල් දමා ක්‍රීඩා කිරීමට මේ දත්ත තනිව භාවිත නොකරන්න.</p></main>
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aviator Odds Analyzer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#10131b;color:#f5f5f5;font-family:Arial,sans-serif;padding:16px}
+.container{max-width:650px;margin:auto}
+h1{color:#ff424e;text-align:center;font-size:26px}
+h2{font-size:18px;color:#ffd166}
+.card{background:#1d2230;padding:16px;border-radius:14px;margin:14px 0}
+input,button{font-size:16px;padding:12px;border-radius:8px;border:0}
+input{background:#303747;color:white;width:100%;margin:6px 0 12px}
+button{background:#ff424e;color:white;font-weight:bold;cursor:pointer;margin:4px 0}
+button.secondary{background:#424d63}
+button.green{background:#159c75}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#303747;padding:12px;border-radius:10px;text-align:center}
+.stat strong{display:block;font-size:23px;color:#ffd166;margin-top:7px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 5px;text-align:center;border-bottom:1px solid #3b4252}
+.high{color:#ff7078;font-weight:bold}
+.small{font-size:13px;color:#bbc3d3;line-height:1.6}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{flex:1;min-width:0}
+#message{color:#7ee7bd}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>✈️ AVIATOR ANALYZER</h1>
+<p class="small" style="text-align:center">
+Odds History · Round Tracking · 10x+ Analysis
+</p>
+
+<div class="card">
+<h2>⚙️ Round Settings</h2>
+<label>Starting Round Number</label>
+<input id="startRound" type="number" value="5672531">
+<p class="small">පළමු Round අංකය මෙතැන සකසන්න.</p>
+<button class="secondary" onclick="setStart()">Save Starting Round</button>
+</div>
+
+<div class="card">
+<h2>➕ Add New Odds</h2>
+<label>Odds අගය (උදා: 1.52 හෝ 12.45)</label>
+<input id="odds" type="number" step="0.01" min="1" placeholder="Enter odds">
+<button style="width:100%" onclick="addOdds()">ADD ODDS</button>
+<p id="message" class="small"></p>
+</div>
+
+<div class="stats">
+<div class="stat">මුළු Rounds<strong id="total">0</strong></div>
+<div class="stat">10x+ Rounds<strong id="highCount">0</strong></div>
+<div class="stat">10x+ ප්‍රතිශතය<strong id="highRate">0%</strong></div>
+<div class="stat">අවසාන 10x+ සිට<strong id="gap">—</strong></div>
+</div>
+
+<div class="card">
+<h2>📊 Odds History</h2>
+<input id="search" type="number" placeholder="Round අංකයෙන් සොයන්න" oninput="render()">
+<div class="row">
+<button class="secondary" onclick="exportData()">Download Backup</button>
+<button class="secondary" onclick="document.getElementById('importFile').click()">Restore Backup</button>
+<input id="importFile" type="file" accept=".json,application/json" hidden onchange="importData(event)">
+</div>
+<button class="secondary" style="width:100%" onclick="clearSearch()">Clear Search</button>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Round</th><th>Odds</th><th>10x+ Gap</th><th>Action</th></tr></thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+<p class="small" id="summary"></p>
+</div>
+
+<div class="card">
+<h2>ℹ️ වැදගත්</h2>
+<p class="small">
+මෙම මෙවලම ඇතුළත් කළ පැරණි Odds ගණනය කර ඉතිහාසය පෙන්වයි.
+10x+ ප්‍රතිඵල අතර පරතරය අතීත දත්ත මත පමණක් ගණනය වේ.
+ඊළඟ Round එකේ ප්‍රතිඵලය මෙයින් නිශ්චිතව අනාවැකි කිව නොහැක.
+ඔට්ටු ජයග්‍රහණය සහතික කරන ක්‍රමයක් නොවේ.
+</p>
+</div>
+</div>
+
 <script>
-const INITIAL=`12.85,1.52,2.24,1.47,1.53,3.82,3.15,3.50,1.12,1.24,28.05,2.81,25.49,1.30,3.65,1.14,1.03,1.73,1.55,10.66,1.00,1.60,1.55,2.51,1.03,1.00,5.83,2.40,1.32,6.79,3.72,1.61,1.05,9.03,1.19,1.23,1.01,1.00,2.63,1.27,10.76,1.12,1.49,5.81,1.39,4.74,4.55,1.00,1.83,2.02,1.03,1.53,5.05,1.41,1.16,2.38,14.25,2.87,3.48,19.02,1.12,28.34,1.93,1.17,1.28,5.24,1.00,2.97,1.22,1.46,1.43,1.54,4.94,1.20,1.00,4.78,1.41,24.48,6.07,61.27,1.07,1.74,3.00,23.11,1.12,2.44,5.63,3.37,7.18,1.19,6.69,3.19,1.87,5.19,14.73,1.00,34.43,1.94,2.33,3.52,1.91,57.27,1.14,4.87,5.42,1.21,1.02,2.61,4.71,23.54,1.06,1.30,1.00,1.40,1.14,1.53,2.80,1.17,1.00,1.74,1.97,1.37,1.00,1.04,2.85,5.39,3.69,3.69,1.97,2.02,3.53,1.24,1.55,3.43,11.22,25.42,1.61,1.12,1.18,2.93,13.85,6.66,2.74,1.31,2.72,1.30,3.88,5.54,2.67,2.14,1.31,4.81,1.64,3.51,2.19,1.59,3.17,1.53,1.04,2.95,4.15,2.92,1.08,1.51,3.91,4.24,4.77,2.87,1.46,2.27,1.05,39.15,6.43,5.51,1.03,6.86,1.06,1.51,1.86,3.76,1.02,1.00,4.46,2.17,6.48,2.69,2.64,1.00,1.22,10.19,4.16,1.07,1.21,3.96,1.40`;
-const KEY='aviator-odds-analyzer-v1';let data=[];const $=id=>document.getElementById(id);function parse(s){return s.split(/[\s,;]+/).map(x=>x.trim().replace(/x$/i,'')).filter(Boolean).map(Number).filter(n=>Number.isFinite(n)&&n>0)}function limit(){return Math.max(1,Number($('threshold').value)||10)}function save(){try{localStorage.setItem(KEY,JSON.stringify({data,start:Number($('start').value)||5672531,threshold:limit()}))}catch(e){}}function load(){try{let o=JSON.parse(localStorage.getItem(KEY));if(o&&Array.isArray(o.data)){data=o.data;$('start').value=o.start||5672531;$('threshold').value=o.threshold||10;return}}catch(e){}data=parse(INITIAL).map((odd,i)=>({round:5672531+i,odd}));save()}function render(){let t=limit(),hi=data.filter(d=>d.odd>=t),last=data.at(-1),lastHi=hi.at(-1),gaps=hi.slice(1).map((d,i)=>d.round-hi[i].round);$('total').textContent=data.length;$('hc').textContent=hi.length;$('last').textContent=last?last.round:'—';$('lastodd').textContent='අවසාන Odd: '+(last?last.odd.toFixed(2)+'x':'—');$('since').textContent=lastHi&&last?last.round-lastHi.round:'—';$('avg').textContent=gaps.length?(gaps.reduce((a,b)=>a+b,0)/gaps.length).toFixed(1)+' rounds':'—';$('minmax').textContent=gaps.length?Math.min(...gaps)+' / '+Math.max(...gaps):'—';$('summary').innerHTML=`10x+ ප්‍රතිඵල: <b class="green">${hi.length}</b> · ඉහළම Odd: <b>${data.length?Math.max(...data.map(d=>d.odd)).toFixed(2)+'x':'—'}</b> · අවසාන 10x+ Round: <b>${lastHi?lastHi.round:'තවම නැත'}</b>. සාමාන්‍ය පරතරය අතීත දත්ත මත පමණක් පදනම් වේ.`;let prev=null,rows=data.map(d=>{let gap=d.odd>=t&&prev!==null?d.round-prev:null;if(d.odd>=t)prev=d.round;return {...d,gap,high:d.odd>=t}});let q=$('search').value.toLowerCase().trim(),f=$('filter').value;rows=rows.filter(d=>(f==='all'||(f==='high'&&d.high)||(f==='low'&&!d.high))&&(!q||String(d.round).includes(q)||d.odd.toFixed(2).includes(q))).reverse();$('tbody').innerHTML=rows.map(d=>`<tr><td>${d.round}</td><td class="${d.high?'high':''}">${d.odd.toFixed(2)}x</td><td>${d.high?'<span class="pill">10x+</span>':'—'}</td><td>${d.high?(d.gap===null?'පළමු 10x+':d.gap+' rounds'):'—'}</td></tr>`).join('');$('empty').hidden=rows.length!==0}
-$('add').onclick=()=>{let vals=parse($('newOdds').value);if(!vals.length){alert('නිවැරදි Odds ඇතුළත් කරන්න.');return}let n=data.length?data.at(-1).round+1:(Number($('start').value)||5672531);vals.forEach(odd=>data.push({round:n++,odd}));$('newOdds').value='';save();render();alert(vals.length+' Odds එකතු කළා.')};$('clear').onclick=()=>$('newOdds').value='';$('threshold').onchange=()=>{save();render()};$('start').onchange=()=>{save();render()};$('search').oninput=render;$('filter').onchange=render;$('undo').onclick=()=>{if(data.length&&confirm('අවසාන Odd එක ඉවත් කරන්නද?')){data.pop();save();render()}};$('reset').onclick=()=>{if(confirm('සියලුම history දත්ත මකා දමන්නද?')){data=[];save();render()}};function dl(name,content,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([content],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}$('csv').onclick=()=>{let t=limit(),prev=null,s='Round Number,Odd,10x+,Gap from previous high\n';data.forEach(d=>{let gap=d.odd>=t?(prev===null?'':d.round-prev):'';if(d.odd>=t)prev=d.round;s+=`${d.round},${d.odd.toFixed(2)},${d.odd>=t?'Yes':'No'},${gap}\n`});dl('aviator-odds-history.csv',s,'text/csv;charset=utf-8')};$('backup').onclick=()=>dl('aviator-odds-backup.json',JSON.stringify({data,start:Number($('start').value)||5672531,threshold:limit()},null,2),'application/json');$('restore').onclick=()=>$('file').click();$('file').onchange=async e=>{try{let o=JSON.parse(await e.target.files[0].text());if(!Array.isArray(o.data)||!o.data.every(d=>Number.isFinite(+d.round)&&Number.isFinite(+d.odd)))throw 0;data=o.data.map(d=>({round:+d.round,odd:+d.odd}));$('start').value=o.start||5672531;$('threshold').value=o.threshold||10;save();render();alert('Backup restore කළා.')}catch(_){alert('JSON backup එක නිවැරදි නැහැ.')}e.target.value=''};load();render();
-</script></body></html>
+const KEY = "aviatorAnalyzerDataV1";
+const STARTKEY = "aviatorAnalyzerStartV1";
+let records = [];
+let startRound = 5672531;
+
+try {
+ records = JSON.parse(localStorage.getItem(KEY) || "[]");
+ startRound = Number(localStorage.getItem(STARTKEY) || 5672531);
+ if (!Array.isArray(records)) records = [];
+} catch(e) {
+ records = [];
+}
+
+document.getElementById("startRound").value = startRound;
+
+function save() {
+ localStorage.setItem(KEY, JSON.stringify(records));
+ localStorage.setItem(STARTKEY, String(startRound));
+}
+
+function setStart() {
+ const n = Number(document.getElementById("startRound").value);
+ if (!Number.isSafeInteger(n) || n < 1) {
+  alert("නිවැරදි Starting Round Number එකක් ඇතුළත් කරන්න.");
+  return;
+ }
+ if (records.length && !confirm("Starting Round වෙනස් කළොත් දැනට ඇති Rounds වල අංක වෙනස් විය හැකියි. ඉදිරියට යන්නද?")) return;
+ startRound = n;
+ records.forEach((r,i)=>r.round=startRound+i);
+ save();
+ render();
+ alert("Starting Round Number එක Save කළා.");
+}
+
+function addOdds() {
+ const field = document.getElementById("odds");
+ const v = Number(field.value);
+ if (field.value.trim()==="" || !Number.isFinite(v) || v < 1) {
+  alert("1.00 හෝ ඊට වැඩි නිවැරදි Odds අගයක් ඇතුළත් කරන්න.");
+  return;
+ }
+ const round = startRound + records.length;
+ records.push({round:round, odds:v, time:new Date().toISOString()});
+ save();
+ field.value = "";
+ document.getElementById("message").textContent =
+  "Round " + round + " එක Save කළා.";
+ render();
+}
+
+function render() {
+ const q = document.getElementById("search").value.trim();
+ const highIndexes = [];
+ records.forEach((r,i)=>{if(r.odds>=10)highIndexes.push(i)});
+
+ document.getElementById("total").textContent = records.length;
+ document.getElementById("highCount").textContent = highIndexes.length;
+ document.getElementById("highRate").textContent =
+  (records.length ? highIndexes.length/records.length*100 : 0).toFixed(2)+"%";
+
+ let gap = "—";
+ if (highIndexes.length) gap = records.length-1-highIndexes[highIndexes.length-1];
+ document.getElementById("gap").textContent = gap;
+
+ const tbody = document.getElementById("history");
+ tbody.innerHTML = "";
+ const filtered = records.filter(r=>!q || String(r.round).includes(q));
+ filtered.slice().reverse().forEach(r=>{
+  const i=records.findIndex(x=>x===r);
+  let gapText="—";
+  if(r.odds>=10) {
+   const prev=highIndexes.filter(x=>x<i).pop();
+   gapText=prev===undefined ? "First" : i-prev;
+  }
+  const tr=document.createElement("tr");
+  const a=document.createElement("td");
+  a.textContent=r.round;
+  const b=document.createElement("td");
+  b.textContent=Number(r.odds).toFixed(2)+"x";
+  if(r.odds>=10)b.className="high";
+  const c=document.createElement("td");
+  c.textContent=gapText;
+  const d=document.createElement("td");
+  const btn=document.createElement("button");
+  btn.textContent="Delete";
+  btn.className="secondary";
+  btn.onclick=()=>deleteRecord(r.round);
+  d.appendChild(btn);
+  tr.append(a,b,c,d);
+  tbody.appendChild(tr);
+ });
+ document.getElementById("summary").textContent =
+  "10x+ Gap යනු 10x හෝ ඊට වැඩි ප්‍රතිඵල දෙකක් අතර Round ගණනයි. අවසාන Gap එක ඉහත දක්වා ඇත.";
+}
+
+function deleteRecord(round) {
+ if(!confirm("Round "+round+" මකා දමන්නද?"))return;
+ records=records.filter(r=>r.round!==round);
+ records.forEach((r,i)=>r.round=startRound+i);
+ save();
+ render();
+}
+
+function clearSearch() {
+ document.getElementById("search").value="";
+ render();
+}
+
+function exportData() {
+ const data={startRound:startRound,records:records};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="aviator-backup.json";
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function importData(event) {
+ const file=event.target.files[0];
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try {
+   const data=JSON.parse(reader.result);
+   if(!data || !Array.isArray(data.records))throw Error();
+   if(!confirm("Restore කිරීමෙන් දැනට ඇති History එක වෙනුවට Backup එක දමනවා. ඉදිරියට යන්නද?"))return;
+   startRound=Number(data.startRound)||5672531;
+   records=data.records.map((r,i)=>({
+    round:startRound+i,
+    odds:Number(r.odds),
+    time:r.time||new Date().toISOString()
+   })).filter(r=>Number.isFinite(r.odds)&&r.odds>=1);
+   save();
+   document.getElementById("startRound").value=startRound;
+   render();
+   alert("Backup Restore කළා.");
+  } catch(e) {
+   alert("Backup file එක කියවන්න බැහැ. නිවැරදි JSON Backup එකක් තෝරන්න.");
+  }
+ };
+ reader.readAsText(file);
+ event.target.value="";
+}
+
+render();
+</script>
+</body>
+</html>
